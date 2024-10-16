@@ -15,20 +15,14 @@ A **Spotify Clone** web application built using **HTML**, **CSS**, and **JavaScr
 ## How to Run
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/spotify-clone.git
+   git clone https://github.com/SaurabhShisode/Spotify-Clone.git
 2. Navigate to the project directory:
 
     ```bash
-    cd spotify-clone
+    cd Spotify-Clone
     ```
 
 3. Open `index.html` in your browser to view and interact with the Spotify Clone.
-
-## Future Enhancements
-
-- Add a search feature to find songs from the list.
-- Implement a music player with volume control, shuffle, and repeat options.
-- Add playlists and album views.
 
 ## Contributing
 
