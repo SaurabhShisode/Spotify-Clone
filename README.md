@@ -1,7 +1,7 @@
-<div align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify Logo" width="50"/>
-  <h1>Spotify Clone</h1>
-</div>
+<p align="left">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify Logo" width="50" style="vertical-align: middle; display: inline-block;"/>
+  <span style="font-size: 2em; font-weight: bold; vertical-align: middle; display: inline-block; line-height: 50px;">Spotify Clone</span>
+</p>
 
 A **Spotify Clone** web application built using **HTML**, **CSS**, and **JavaScript**. This project replicates the basic functionalities of the Spotify home page, including a list of songs and the ability to **play** and **pause** selected songs.
 
