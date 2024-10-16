@@ -8,6 +8,10 @@ A **Spotify Clone** web application built using **HTML**, **CSS**, and **JavaScr
 - **Play** and **pause** functionality for songs.
 
 ## Technologies Used
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+
 - **HTML**: For structuring the web page.
 - **CSS**: For styling the layout to make it visually similar to Spotify.
 - **JavaScript**: To add interactivity, enabling users to play and pause songs.
