@@ -19,15 +19,20 @@ function secondsToMinutesSeconds(seconds) {
 
 async function getSongs(folder) {
     currFolder = folder;
-    let a = await fetch(`/Spotify-Clone/${folder}/`);  // Corrected path to match your repo structure
+    
+    // Build the correct GitHub Pages URL
+    let baseUrl = `https://SaurabhShisode.github.io/Spotify-Clone/`;  // Base URL for your GitHub Pages site
+    let a = await fetch(`${baseUrl}${folder}/`);  // Fetch from the correct folder
+    
     let response = await a.text();
     let div = document.createElement("div");
     div.innerHTML = response;
     let as = div.getElementsByTagName("a");
     songs = [];
+    
     for (let index = 0; index < as.length; index++) {
         const element = as[index];
-        // Include the folder path to fetch the song
+        // Include the "songs/" prefix to the file name
         if (element.href.endsWith(".mp3")) {
             songs.push(element.href.split(`/${folder}/`)[1]);
         }
@@ -38,17 +43,19 @@ async function getSongs(folder) {
     songUL.innerHTML = "";
     for (const song of songs) {
         let songName = song.split("/").pop();  // Extract the song name
-        songUL.innerHTML = songUL.innerHTML + `<li> <img class="invert" src="img/music.svg" alt="">
-                            <div class="info">
-                                <div>${decodeURIComponent(songName)}</div>
-                                <div>Artist</div>
-                            </div>
-                            <div class="playnow">
-                                <img class="invert" src="img/play.svg" alt="">
-                            </div></li>`;
+        songUL.innerHTML += `<li> 
+                                <img class="invert" src="img/music.svg" alt="">
+                                <div class="info">
+                                    <div>${decodeURIComponent(songName)}</div>
+                                    <div>Artist</div>
+                                </div>
+                                <div class="playnow">
+                                    <img class="invert" src="img/play.svg" alt="">
+                                </div>
+                            </li>`;
     }
 
-    // Attach an event listener to each song
+    // Attach event listeners to the song list
     Array.from(document.querySelector(".songList").getElementsByTagName("li")).forEach(e => {
         e.addEventListener("click", element => {
             playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
@@ -58,19 +65,11 @@ async function getSongs(folder) {
     return songs;
 }
 
-const playMusic = (track, pause = false) => {
-    currentSong.src = `/Spotify-Clone/${currFolder}/` + track;  // Correct path
-    if (!pause) {
-        currentSong.play();
-        play.src = "img/pause.svg";
-    }
-    document.querySelector(".songinfo").innerHTML = decodeURI(track);
-    document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
-}
 
 async function displayAlbums() {
     console.log("displaying albums");
-    let a = await fetch(`/Spotify-Clone/songs/`);  // Correct path for fetching the albums
+    let baseUrl = `https://SaurabhShisode.github.io/Spotify-Clone/`;  // Base URL for your GitHub Pages site
+    let a = await fetch(`${baseUrl}songs/`);
     let response = await a.text();
     let div = document.createElement("div");
     div.innerHTML = response;
@@ -81,14 +80,14 @@ async function displayAlbums() {
     for (let index = 0; index < array.length; index++) {
         const e = array[index];
 
-        // Extract folder name using pathname
+        // Extract folder name using pathname and splitting correctly
         let folderPath = new URL(e.href).pathname;
-        let folderParts = folderPath.split("/");  // Split into parts
-        let folder = folderParts[folderParts.length - 2];  // Get the folder name (second last part)
-        
+        let folderParts = folderPath.split("/");
+        let folder = folderParts[folderParts.length - 2];  // Folder name
+
         if (folder && e.href.includes("/songs") && !e.href.includes(".htaccess")) {
             try {
-                let infoUrl = `/Spotify-Clone/songs/${folder}/info.json`;  // Correct path to info.json
+                let infoUrl = `${baseUrl}songs/${folder}/info.json`;  // Correct path for info.json
                 console.log(`Fetching: ${infoUrl}`);
                 let infoFetch = await fetch(infoUrl);
                 let metadata = await infoFetch.json();
@@ -104,7 +103,7 @@ async function displayAlbums() {
                         </svg>
                     </div>
 
-                    <img src="/Spotify-Clone/songs/${folder}/cover.jpg" alt="Album Cover">
+                    <img src="${baseUrl}songs/${folder}/cover.jpg" alt="Album Cover">
                     <h2>${metadata.title}</h2>
                     <p>${metadata.description}</p>
                 </div>`;
@@ -114,6 +113,7 @@ async function displayAlbums() {
         }
     }
 }
+
 
 async function main() {
     // Get the list of all the songs from a specific folder
