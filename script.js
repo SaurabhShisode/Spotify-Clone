@@ -20,29 +20,24 @@ function secondsToMinutesSeconds(seconds) {
 async function getSongs(folder) {
     currFolder = folder;
     
-    // Build the correct GitHub Pages URL
-    let baseUrl = `https://saurabhshisode.github.io/Spotify-Clone/`;  // Base URL for your GitHub Pages site
-    let a = await fetch(`${baseUrl}${folder}/`);  // Fetch from the correct folder
+    // Use the full GitHub Pages URL path without the "songs/" directory
+    let baseUrl = `https://saurabhshisode.github.io/Spotify-Clone/`;
+    let response = await fetch(`${baseUrl}${folder}/info.json`);  // Fetch info.json directly in the new structure
     
-    let response = await a.text();
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    let as = div.getElementsByTagName("a");
-    songs = [];
-    
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index];
-        // Include the "songs/" prefix to the file name
-        if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`/${folder}/`)[1]);
-        }
+    if (!response.ok) {
+        console.error(`Failed to fetch info.json for folder: ${folder}. Status: ${response.status}`);
+        return;
     }
+    
+    let data = await response.json();
+    songs = data.songs;  // Assuming your info.json has a "songs" array with filenames
 
     // Show all the songs in the playlist
     let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0];
     songUL.innerHTML = "";
+
     for (const song of songs) {
-        let songName = song.split("/").pop();  // Extract the song name
+        let songName = song;  // Get the song filename directly
         songUL.innerHTML += `<li> 
                                 <img class="invert" src="img/music.svg" alt="">
                                 <div class="info">
@@ -55,7 +50,7 @@ async function getSongs(folder) {
                             </li>`;
     }
 
-    // Attach event listeners to the song list
+    // Attach event listeners to each song
     Array.from(document.querySelector(".songList").getElementsByTagName("li")).forEach(e => {
         e.addEventListener("click", element => {
             playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
@@ -65,14 +60,31 @@ async function getSongs(folder) {
     return songs;
 }
 
+const playMusic = (track, pause = false) => {
+    let baseUrl = `https://saurabhshisode.github.io/Spotify-Clone/`;
+    
+    currentSong.src = `${baseUrl}${currFolder}/` + track;  // Correct path to the song file in the new structure
+    if (!pause) {
+        currentSong.play();
+        play.src = "img/pause.svg";
+    }
+    document.querySelector(".songinfo").innerHTML = decodeURI(track);
+    document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+}
 
 async function displayAlbums() {
-    console.log("displaying albums");
-    let baseUrl = `https://saurabhshisode.github.io/Spotify-Clone/`;  // Base URL for your GitHub Pages site
-    let a = await fetch(`${baseUrl}songs/`);
-    let response = await a.text();
+    console.log("Displaying albums");
+    
+    let baseUrl = `https://saurabhshisode.github.io/Spotify-Clone/`;
+    let response = await fetch(`${baseUrl}`);  // Fetch directly since playlists are now in the root
+    
+    if (!response.ok) {
+        console.error(`Failed to fetch albums. Status: ${response.status}`);
+        return;
+    }
+
     let div = document.createElement("div");
-    div.innerHTML = response;
+    div.innerHTML = await response.text();
     let anchors = div.getElementsByTagName("a");
     let cardContainer = document.querySelector(".cardContainer");
     let array = Array.from(anchors);
@@ -85,11 +97,16 @@ async function displayAlbums() {
         let folderParts = folderPath.split("/");
         let folder = folderParts[folderParts.length - 2];  // Folder name
 
-        if (folder && e.href.includes("/songs") && !e.href.includes(".htaccess")) {
+        if (folder && !e.href.includes(".htaccess")) {
             try {
-                let infoUrl = `${baseUrl}songs/${folder}/info.json`;  // Correct path for info.json
-                console.log(`Fetching: ${infoUrl}`);
+                let infoUrl = `${baseUrl}${folder}/info.json`;  // Correct path to info.json
                 let infoFetch = await fetch(infoUrl);
+
+                if (!infoFetch.ok) {
+                    console.error(`Failed to fetch metadata for folder ${folder}. Status: ${infoFetch.status}`);
+                    continue;
+                }
+
                 let metadata = await infoFetch.json();
 
                 // Append album card
@@ -103,7 +120,7 @@ async function displayAlbums() {
                         </svg>
                     </div>
 
-                    <img src="${baseUrl}songs/${folder}/cover.jpg" alt="Album Cover">
+                    <img src="${baseUrl}${folder}/cover.jpg" alt="Album Cover">
                     <h2>${metadata.title}</h2>
                     <p>${metadata.description}</p>
                 </div>`;
@@ -114,10 +131,9 @@ async function displayAlbums() {
     }
 }
 
-
 async function main() {
     // Get the list of all the songs from a specific folder
-    await getSongs("songs/hothits");
+    await getSongs('hothits');  // Fetch songs from the 'hothits' folder (now in the root)
     console.log(songs);
 
     await displayAlbums();
@@ -193,7 +209,7 @@ async function main() {
 
     Array.from(document.getElementsByClassName("card")).forEach(e => {
         e.addEventListener("click", async item => {
-            songs = await getSongs(`songs/${item.currentTarget.dataset.folder}`);
+            songs = await getSongs(`${item.currentTarget.dataset.folder}`);
             playMusic(songs[0]);
         });
     });
