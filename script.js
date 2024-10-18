@@ -128,7 +128,7 @@ async function displayAlbums() {
 
 async function main() {
     //get the list of all the songs
-    await getSongs("songs/hothits")
+    await getSongs("/songs/hothits")
     console.log(songs)
 
     await displayAlbums()
