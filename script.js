@@ -21,7 +21,7 @@ async function getSongs(folder) {
     currFolder = folder;
     
     // Build the correct GitHub Pages URL
-    let baseUrl = `https://SaurabhShisode.github.io/Spotify-Clone/`;  // Base URL for your GitHub Pages site
+    let baseUrl = `https://saurabhshisode.github.io/Spotify-Clone/`;  // Base URL for your GitHub Pages site
     let a = await fetch(`${baseUrl}${folder}/`);  // Fetch from the correct folder
     
     let response = await a.text();
@@ -68,7 +68,7 @@ async function getSongs(folder) {
 
 async function displayAlbums() {
     console.log("displaying albums");
-    let baseUrl = `https://SaurabhShisode.github.io/Spotify-Clone/`;  // Base URL for your GitHub Pages site
+    let baseUrl = `https://saurabhshisode.github.io/Spotify-Clone/`;  // Base URL for your GitHub Pages site
     let a = await fetch(`${baseUrl}songs/`);
     let response = await a.text();
     let div = document.createElement("div");
