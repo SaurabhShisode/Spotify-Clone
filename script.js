@@ -74,60 +74,48 @@ const playMusic = (track, pause = false) => {
 
 async function displayAlbums() {
     console.log("displaying albums");
-    
-    // Fetch the folder list from the /songs/ directory (auto-index page)
     let a = await fetch(`/songs/`);
     let response = await a.text();
-    console.log("Fetched response from /songs/: ", response);  // Debug log for response
-    
     let div = document.createElement("div");
     div.innerHTML = response;
-    
     let anchors = div.getElementsByTagName("a");
     let cardContainer = document.querySelector(".cardContainer");
     let array = Array.from(anchors);
 
     for (let index = 0; index < array.length; index++) {
         const e = array[index];
-        
-        // Extract the folder name (skip parent directory link)
-        if (e.textContent !== "Parent Directory" && e.href.includes("/songs/")) {
-            let folderPath = new URL(e.href).pathname;
-            let folderParts = folderPath.split("/");
-            let folder = folderParts[folderParts.length - 2];  // Folder name
 
-            // Check if we have a valid folder
-            if (folder) {
-                try {
-                    let infoUrl = `/songs/${folder}/info.json`;  // Attempt to fetch info.json
-                    console.log(`Fetching: ${infoUrl}`);
-                    
-                    let infoFetch = await fetch(infoUrl);
-                    if (!infoFetch.ok) {
-                        console.error(`Failed to fetch ${infoUrl} with status: ${infoFetch.status}`);
-                        continue;  // Skip this folder if info.json isn't available
-                    }
+        // Extract folder name using pathname and splitting correctly
+        let folderPath = new URL(e.href).pathname;
+         // Extract path like "/songs/cs/"
+        let folderParts = folderPath.split("/"); // Split into parts
+        let folder = folderParts[folderParts.length - 1]; // Get the folder name (second last part)
+        // Only proceed if we have a valid folder name
+        if (folder && e.href.includes("/songs") && !e.href.includes(".htaccess")) {
+            // Fetch info.json from the correct path
+            try {
+                let infoUrl = `/songs/${folder}/info.json`; // Correct URL structure
+                console.log(`Fetching: ${infoUrl}`);
+                let a = await fetch(infoUrl);
+                let response = await a.json();
 
-                    let metadata = await infoFetch.json();
+                // Append album card
+                cardContainer.innerHTML += `
+                <div data-folder="${folder}" class="card">
+                    <div class="play">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 20V4L19 12L5 20Z" stroke="#141B34" fill="#000" stroke-width="1.5"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
 
-                    // Append album card with metadata
-                    cardContainer.innerHTML += `
-                    <div data-folder="${folder}" class="card">
-                        <div class="play">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 20V4L19 12L5 20Z" stroke="#141B34" fill="#000" stroke-width="1.5"
-                                    stroke-linejoin="round" />
-                            </svg>
-                        </div>
-
-                        <img src="/songs/${folder}/cover.jpg" alt="Album Cover">
-                        <h2>${metadata.title}</h2>
-                        <p>${metadata.description}</p>
-                    </div>`;
-                } catch (error) {
-                    console.error(`Failed to fetch metadata for folder ${folder}`, error);
-                }
+                    <img src="/songs/${folder}/cover.jpg" alt="">
+                    <h2>${response.title}</h2>
+                    <p>${response.description}</p>
+                </div>`;
+            } catch (error) {
+                console.error(`Failed to fetch metadata for folder ${folder}`, error);
             }
         }
     }
