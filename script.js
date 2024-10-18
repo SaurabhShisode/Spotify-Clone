@@ -128,7 +128,7 @@ async function displayAlbums() {
 
 async function main() {
     //get the list of all the songs
-    await getSongs("/songs/hothits")
+    await getSongs("/Spotify-Clone/songs/hothits/")
     console.log(songs)
 
     await displayAlbums()
