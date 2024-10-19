@@ -61,6 +61,27 @@ body {
     position: relative;
 }
 
+.song-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f0f0f0;
+    text-transform: uppercase; 
+    letter-spacing: 1px;        
+}
+
+.artist-name {
+    font-size: 15px;
+    color: #bbbbbb;
+    margin-top: 5px;  
+}  
+.album-cover {
+    width: 80px;        
+    height: 80px;        
+    object-fit: cover;   
+    border-radius: 5px;  
+    margin-right: 10px;  
+}
+
 .footer {
     display: flex;
     font-size: 10px;
@@ -120,6 +141,9 @@ body {
     transition: all .9s;
 }
 
+.card p{
+    color: #bbbbbb;
+}
 .card:hover {
     background-color: rgb(105, 103, 103);
     cursor: pointer;
@@ -188,6 +212,24 @@ body {
     font-size: 17px;
 }
 
+.songinfo {
+    font-size: 17px;         
+    font-weight: bold;        
+    color: #ffffff;           
+    margin-top: 6px;         
+    margin-bottom: 5px;       
+    text-transform: capitalize; 
+}
+
+
+.songtime {
+    font-size: 17px; 
+    font-weight: bold;          
+    color: #888888;           
+    text-align: center;       
+    margin-top: -1px;          
+}
+
 
 .playbar {
 
@@ -229,14 +271,23 @@ body {
     gap: 12px;
     cursor: pointer;
     padding: 14px 0;
-    border: 3px solid rgba(146, 143, 143, 0.491);
+    
     margin: 12px 0;
     padding: 20px;
     border-radius: 10px;
+    transition: all .9s;
 }
-
+.songList ul li:hover {
+    background-color: rgb(105, 103, 103);
+    cursor: pointer;
+    --a: 1;
+}
 .songList .info {
-    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   
+    padding-left: 10px;        
+    height: 100%;   
     width: 344px;
 }
 
