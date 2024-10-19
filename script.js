@@ -82,13 +82,15 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause = false) => {
-    currentSong.src = `/${currFolder}/` + track;
+    const filePath = `/${currFolder}/` + track;
+    console.log("Attempting to play:", filePath);  // Log the file path
+
+    currentSong.src = filePath;
 
     if (!pause) {
         currentSong.play().catch(error => {
             console.error("Error playing the song:", error);
         });
-
         play.src = "img/pause.svg";
     } else {
         currentSong.pause();
@@ -99,6 +101,7 @@ const playMusic = (track, pause = false) => {
     document.querySelector(".songinfo").innerHTML = decodeURI(trackWithoutExtension);
     document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 };
+
 
 async function displayAlbums() {
     let a = await fetch(`/songs/`);
