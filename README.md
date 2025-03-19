@@ -23,7 +23,7 @@ A **Spotify Clone** web application built using **HTML**, **CSS**, and **JavaScr
 
 The project is deployed and available at the following link:
 
-[**Spotify Clone - Live Demo**](https://spotifyclonestream.freewebhostmost.com/)
+[**Spotify Clone - Live Demo**](https://spotifystream.freewebhostmost.com/)
 
 ## How to Run
 1. Clone the repository:
